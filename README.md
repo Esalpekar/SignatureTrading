@@ -1,7 +1,7 @@
 # Signature Trading
 
-Hedging a portfolio of arbitrary, path-dependent derivatives — under a risk
-profile you choose. A validated Python core (`sigcore`) plus an interactive
+Hedging a portfolio of arbitrary, path-dependent derivatives under a risk
+profile chosen by the user. A Python core plus an interactive
 web demo, built on the signature methods of Lyons et al. (2019).
 
 **Live demo:** https://esalpekar.github.io/SignatureTrading/
@@ -46,7 +46,7 @@ Truncate at some level (they get proressively less influential, so this is usual
 There's a very convenient property that makes all of this useful: any
 continuous function of the path can be written, to arbitrary accuracy, as a
 plain linear combination of signature terms. A nonlinear, history-dependent
-quantity can be written as one linear function. The signature *linearizes*
+quantity can be written as one linear function. The signature linearizes
 the space of everything you might want to compute from a path.
 
 ## Why this works in hedging
