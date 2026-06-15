@@ -60,7 +60,7 @@ the running signature `S_{0,t}`: pick a list of coefficients `ℓ`, and your
 holding at time `t` is the inner product `⟨ℓ, S_{0,t}⟩`. The same coefficients,
 evaluated as the path unfolds, generate the whole time series of holdings.
 
-Second — and this is what makes it computable — the product of two
+Secondly, the product of two
 signature-linear functions is again signature-linear (via an operation called
 the shuffle product). Follow the chain: your loss `L` at maturity is linear in
 the signature; your risk penalty `P(L)` (the polynomial encoding how much you
