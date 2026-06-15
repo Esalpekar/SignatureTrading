@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+body { @apply bg-paper text-ink font-sans antialiased; }
+
+/* hatched fill for the asymmetric distribution (monochrome: texture not colour) */
+.hatch { background-image: repeating-linear-gradient(45deg, #141414 0 1px, transparent 1px 4px); }
