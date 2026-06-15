@@ -144,7 +144,7 @@ export default function App() {
 
           <section>
             <h3 className="text-sm uppercase tracking-wide text-slate mb-1">Terminal P&amp;L. Mean-variance vs your risk profile</h3>
-            <PnlHistogram mv={pnl?.L_mv} asym={pnl?.L_as} tau={pnl?.tau} />
+            <PnlHistogram hist={pnl?.hist} tau={pnl?.tau} />
             <div className="flex gap-6 text-xs text-slate mt-1">
               <span><span className="inline-block w-3 h-2 bg-fill border border-grid mr-1" />mean-variance</span>
               <span><span className="inline-block w-3 border-t-2 border-ink mr-1 align-middle" />your profile (downside-averse)</span>

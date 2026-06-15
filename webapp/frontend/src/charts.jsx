@@ -4,25 +4,11 @@ import React, { useRef, useState } from 'react'
 
 const INK = '#141414', GRID = '#B8B8B8', SLATE = '#6B6B6B', FILL = '#ECECEC'
 
-function counts(values, lo, hi, bins) {
-  const c = new Array(bins).fill(0)
-  const w = (hi - lo) / bins
-  for (const v of values) {
-    let b = Math.floor((v - lo) / w)
-    if (b < 0) b = 0
-    if (b >= bins) b = bins - 1
-    c[b]++
-  }
-  return { c, w }
-}
-
 // Both distributions share ONE vertical scale (same n_paths), so the thinned
 // loss tail and widened body are read off honestly rather than each re-normalised.
-function histPair(mv, asym, lo, hi, bins) {
-  const m = counts(mv, lo, hi, bins), a = counts(asym, lo, hi, bins)
-  const max = Math.max(...m.c, ...a.c, 1)
-  const bar = (cc, i) => ({ x0: lo + i * m.w, x1: lo + (i + 1) * m.w, h: cc / max, c: cc })
-  return { mv: m.c.map(bar), asym: a.c.map(bar), w: m.w }
+// Counts are prebinned in the databank (see build_databank.py); we only lay them out.
+function barsFrom(c, lo, w, max) {
+  return c.map((cc, i) => ({ x0: lo + i * w, x1: lo + (i + 1) * w, h: cc / max, c: cc }))
 }
 
 // map a pointer event to a viewBox x-coordinate (the svg scales responsively)
@@ -33,15 +19,15 @@ function vbX(e, ref, width) {
 
 // Overlaid terminal-P&L distributions: MV (solid light fill) vs your risk
 // profile (heavy outline). The loss tail (L > tau) is shaded. THIS is the hero.
-export function PnlHistogram({ mv, asym, tau, width = 620, height = 300 }) {
+export function PnlHistogram({ hist, tau, width = 620, height = 300 }) {
   const ref = useRef(null)
   const [hx, setHx] = useState(null)
-  if (!mv || !asym) return null
-  const all = mv.concat(asym)
-  const lo = Math.min(...all), hi = Math.max(...all)
-  const bins = 161
-  const hist = histPair(mv, asym, lo, hi, bins)
-  const hm = { bars: hist.mv, w: hist.w }, ha = { bars: hist.asym, w: hist.w }
+  if (!hist) return null
+  const { lo, hi, mv, asym } = hist
+  const bins = mv.length
+  const w = (hi - lo) / bins
+  const max = Math.max(...mv, ...asym, 1)
+  const hm = { bars: barsFrom(mv, lo, w, max), w }, ha = { bars: barsFrom(asym, lo, w, max), w }
   const pad = { l: 8, r: 8, t: 14, b: 34 }
   const W = width - pad.l - pad.r, H = height - pad.t - pad.b
   const sx = x => pad.l + ((x - lo) / (hi - lo)) * W
