@@ -33,15 +33,15 @@ The workhorse is signature theory. A signature is a representation of a path in 
 
 Take the asset's price path and enrich it slightly: add a clock, and a
 "lead-lag" copy of the path against itself (a standard trick that makes
-volatility visible to the integrals below). Now read off the levels:
+volatility visible to the integrals below). The levels are summarized as follows:
 
 - **Level 1** records the net change in each channel (where the path ended up).
-- **Level 2** records signed areas (how pairs of channels co-move over time).
+- **Level 2** records signed areas (how pairs of assets happen to co-move over time).
   This captures order and interaction that a net change throws away (it is, for
   instance, how realized variance becomes legible).
 - **Level 3** records a still finer interaction, and so on up.
 
-Truncate at some level (they get proressively less influential, so this is often defensible) and you have a finite feature vector that summarizes the entire path.
+Truncate at some level (they get proressively less influential, so this is usually defensible) and you have a finite feature vector that summarizes the entire path.
 
 There's a very convenient property that makes all of this useful: any
 continuous function of the path can be written, to arbitrary accuracy, as a
@@ -87,10 +87,10 @@ optimization. That is the trick the whole project rests on.
 The [live demo](https://esalpekar.github.io/SignatureTrading/) lets you turn the
 knobs:
 
-- pick a **world** — GBM or stochastic-volatility Heston;
+- pick a **model of the underlying process** — GBM or stochastic-volatility Heston;
 - pick a **contract** — forward, Asian (average-price), or variance swap;
 - dial your **risk profile** — the loss polynomial, i.e. how steeply you punish
-  larger losses.
+  particular kinds of losses.
 
 It then derives the optimal hedge, plots the resulting distribution of profit
 and loss, and overlays what plain mean-variance hedging would have done instead.
