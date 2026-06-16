@@ -77,15 +77,14 @@ export default function App() {
       <header className="mb-8 border-b border-ink pb-4">
         <h1 className="text-2xl font-semibold tracking-tight">Signature-theoretic portfolio hedging of exotic derivatives under a personalized risk profile</h1>
         <p className="font-serif text-slate mt-1 max-w-2xl">
-          Pick a world, a contract, and a risk attitude. Watch the optimal hedge and how your
-          attitude to loss reshapes the tail of the shortfall.
+          Inputs: A model of the generator of the underlying price path, a derivative type, and a personal risk polynomial. Outputs: an optimal portfolio time series and your terminal PnL distribution.
         </p>
       </header>
 
       <div className="grid md:grid-cols-[320px_1fr] gap-8">
         {/* ---- pipeline controls ---- */}
         <div className="space-y-6">
-          <Step n="1" title="Model of the underlying" hint="the assumed behaviour of the asset price over time.">
+          <Step n="1" title="Model of the underlying" hint="the assumed behavior of the asset price over time.">
             <div className="flex gap-2">
               {['heston', 'gbm'].map(m => (
                 <button key={m} onClick={() => setModel(m)}
@@ -100,7 +99,7 @@ export default function App() {
               : 'A model with stochastic volatility.'}</p>
           </Step>
 
-          <Step n="2" title="Derivative" hint="the contract you are hedging. What you owe at maturity.">
+          <Step n="2" title="Derivative" hint="the contract you are hedging (what you owe at maturity)">
             <div className="flex flex-col gap-1">
               {Object.entries(derivs).map(([k, v]) => (
                 <button key={k} onClick={() => setDerivative(k)}
@@ -120,7 +119,7 @@ export default function App() {
             </p>
           </Step>
 
-          <Step n="3" title="Loss polynomial" hint="how you weigh losses of different sizes. The cubic tilts the penalty toward losses. You fear a big loss more than you value an equal gain.">
+          <Step n="3" title="Loss polynomial" hint="how you weigh losses of different sizes. For example, the cubic tilts the penalty toward losses.">
             <PolyPlot gamma={gamma} delta={delta} />
             <Slider label="γ (downside tilt)" value={gamma} min={0} max={30} step={0.5} onChange={setGamma} />
             <Slider label="δ (tail weight)" value={delta} min={deltaMin} max={400} step={1} onChange={setDelta} />
@@ -132,7 +131,7 @@ export default function App() {
         <div className="space-y-6">
           <div className="flex items-baseline justify-between">
             <h2 className="text-lg font-semibold">Result {loading && <span className="text-slate text-sm font-normal">· computing…</span>}</h2>
-            <div className="font-mono text-sm text-slate">fair price p₀ = <span className="text-ink">{fmt(pnl?.p0)}</span> · K = {fmt(pnl?.K)}</div>
+            <div className="font-mono text-sm text-slate">K = <span className="text-ink">{fmt(pnl?.K)}</span></div>
           </div>
 
           {pnl?.complete && (
@@ -158,7 +157,7 @@ export default function App() {
               <Stat label="95% CVaR (loss tail)" mv={pnl?.stats_mv.cvar95} as={pnl?.stats_as.cvar95} />
               <Stat label="P[loss > τ]" mv={pnl?.stats_mv.p_exceed} as={pnl?.stats_as.p_exceed} />
               <Stat label="skew" mv={pnl?.stats_mv.skew} as={pnl?.stats_as.skew} />
-              <p className="text-xs text-slate mt-2 font-serif">A downside-averse profile accepts more variance to thin the loss tail. Lower CVaR, more negative skew.</p>
+              <p className="text-xs text-slate mt-2 font-serif">A downside-averse profile accepts more variance to thin the loss tail.</p>
             </section>
 
             <section>
@@ -172,16 +171,22 @@ export default function App() {
             </section>
           </div>
 
-          <details className="text-xs text-slate border-t border-divider pt-3">
-            <summary className="cursor-pointer">Assumptions and notes</summary>
-            <p className="font-serif mt-1 max-w-2xl">
+          <div className="text-xs text-slate border-t border-divider pt-3">
+            <div className="uppercase tracking-wide mb-1">Notes</div>
+            <p className="font-serif max-w-2xl">
               Data is generated from the chosen model (GBM or Heston), under the risk-neutral measure, in
               the stationary regime where the method is validated. In practice, you can parameterize this 
               regime with market factors and adapt the strategy over time.
 
+              The loss polynomial is restricted to be convex. This is not required, but eases the optimization for demo purposes.
+
+              
+
+
+
               
             </p>
-          </details>
+          </div>
         </div>
       </div>
 
